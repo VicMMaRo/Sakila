@@ -22,7 +22,7 @@ const pageSize = 10; // Número de resultados por página
 // Carga todas las películas de la base de datos.
 const loadFilms = () => __awaiter(void 0, void 0, void 0, function* () {
     try { //Realiza un fetch HTTP GET a /api/films
-        const response = yield fetch('http://localhost:3000/api/films');
+        const response = yield fetch('/api/films');
         filmsData = yield response.json(); // Guarda los resultados
         filteredFilms = [...filmsData];
         renderFilms(); // Lamada a la función para mostrar los resultados
@@ -35,7 +35,7 @@ const loadFilms = () => __awaiter(void 0, void 0, void 0, function* () {
 // Carga las películas disponibles
 const loadAvailableFilms = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield fetch('http://localhost:3000/api/films/available');
+        const response = yield fetch('/api/films/available');
         filmsData = yield response.json();
         filteredFilms = [...filmsData];
         renderFilms();
@@ -66,11 +66,11 @@ const renderFilms = () => {
     if (filteredFilms.length === 0) {
         app.innerHTML = `
       <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
-        <button id="btn-all-films" class="btn btn-outline-primary">Todas las películas</button>
-        <button id="btn-available-films" class="btn btn-outline-success">Películas disponibles</button>
+        <button id="btn-all-films" class="btn btn-outline-danger">Todas las películas</button>
+        <button id="btn-available-films" class="btn btn-danger">Clientes de Canada</button>
         <div class="input-group" style="width: 350px;">
           <input type="text" id="search-input" class="form-control" placeholder="Buscar por título o descripción...">
-          <button class="btn btn-primary" type="button" id="filter-button">
+          <button class="btn btn-danger" type="button" id="filter-button">
             Filtrar
           </button>
           <button class="btn btn-outline-danger" type="button" id="clear-search">
@@ -91,30 +91,30 @@ const renderFilms = () => {
     // Renderizado de botones e input
     const buttons = `
     <div class="mb-3 d-flex align-items-center flex-wrap gap-2">
-      <button id="btn-all-films" class="btn btn-outline-primary">Todas las películas</button>
-      <button id="btn-available-films" class="btn btn-outline-success">Clientes de Canada</button>
+      <button id="btn-all-films" class="btn btn-outline-danger">Todas las películas</button>
+      <button id="btn-available-films" class="btn btn-danger">Clientes de Canada</button>
       <div class="input-group" style="width: 350px;">
         <input type="text" id="search-input" class="form-control" placeholder="Buscar por título o descripción...">
-        <button class="btn btn-primary" type="button" id="filter-button">
+        <button class="btn btn-danger" type="button" id="filter-button">
           Filtrar
         </button>
         <button class="btn btn-outline-danger" type="button" id="clear-search">
           Limpiar
         </button>
       </div>
-      <span class="badge bg-info ms-2">${filteredFilms.length} resultados</span>
+      <span class="badge bg-danger ms-2">${filteredFilms.length} resultados</span>
     </div>
   `;
     // Tabla dinámica y paginación al final
     const table = `
     ${buttons}
-    <table class="table table-striped table-hover">
-      <thead class="table-dark">
+    <table class="table table-hover table-bordered mb-0">
+      <thead class="table-danger text-white">
         <tr>
           ${columnNames.map(col => `<th>${col.replace('_', ' ').toUpperCase()}</th>`).join('')}
         </tr>
       </thead>
-      <tbody>
+      <tbody class="table-light">
         ${paginatedFilms.map(film => `
           <tr>
             ${columnNames.map(col => { var _a; return `<td>${(_a = film[col]) !== null && _a !== void 0 ? _a : ''}</td>`; }).join('')}

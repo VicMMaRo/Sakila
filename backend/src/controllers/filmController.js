@@ -9,11 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFilms = void 0;
+exports.getAvailable = exports.getFilms = void 0;
 const db_1 = require("../database/db");
+//Lógica de getFilms
 const getFilms = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const [rows] = yield db_1.db.query('SELECT film_id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating FROM film LIMIT 20');
+        //Llamamos a getDbPool para comprobar conexion
+        const db = (0, db_1.getDbPool)();
+        const [rows] = yield db.query('SELECT film_id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating FROM film');
         res.json(rows);
     }
     catch (error) {
@@ -22,3 +25,23 @@ const getFilms = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getFilms = getFilms;
+//Lógica de de getAvailable
+const getAvailable = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //Llamamos a getDbPool para comprobar conexion
+    const db = (0, db_1.getDbPool)();
+    try {
+        const [rows] = yield db.query(`
+      SELECT c.first_name, c.last_name, c.email
+      FROM customer c
+      JOIN address a ON c.address_id = a.address_id
+      JOIN city ci ON a.city_id = ci.city_id
+      JOIN country co ON ci.country_id = co.country_id
+      WHERE co.country = 'Canada';
+    `);
+        res.json(rows);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error al consultar datos', error });
+    }
+});
+exports.getAvailable = getAvailable;
